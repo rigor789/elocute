@@ -20,7 +20,7 @@
         <v-card color="primary" tile class="pa-4">
           <h3 text-xs-center>I'm a Teacher</h3> 
           <h4 text-xs-center>Access your account</h4>            
-          <v-btn large color="secondary" v-on:click="auth">Login</v-btn>
+          <v-btn large color="secondary" @click="auth">Login</v-btn>
         </v-card>
       </v-flex>
       <v-flex d-flex xs12 sm6>

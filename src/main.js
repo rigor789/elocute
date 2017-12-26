@@ -4,12 +4,15 @@ import Vue from 'vue';
 import App from './App';
 import router from './router';
 import Vuetify from 'vuetify';
+import VueFire from 'vuefire';
 import firebase from 'firebase';
-import { config } from './utils/firebaseConfig';
+import { connection } from './utils/firebase';
 import firebaseui from 'firebaseui';
 import 'firebaseui/dist/firebaseui.css';
 
 Vue.config.productionTip = false;
+
+Vue.use(VueFire);
 
 Vue.use(router);
 
@@ -27,8 +30,7 @@ new Vue({
   el: '#app',
   router,
   created() {
-    firebase.initializeApp(config);
-    firebase.auth().onAuthStateChanged(user => {
+    connection.auth().onAuthStateChanged(user => {
       if (user) {
         this.$router.push('/success');
       } else {
