@@ -9,7 +9,7 @@ export default {
 	name: 'auth',
 	mounted() {
 		var uiConfig = {
-			signInSuccessUrl: '/success',
+			signInSuccessUrl: '/',
 			signInOptions: [firebase.auth.EmailAuthProvider.PROVIDER_ID],
 			credentialHelper: firebaseui.auth.CredentialHelper.NONE,
 		};

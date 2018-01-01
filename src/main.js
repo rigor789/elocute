@@ -32,7 +32,7 @@ new Vue({
   created() {
     connection.auth().onAuthStateChanged(user => {
       if (user) {
-        this.$router.push('/success');
+        this.$router.push('/home');
       } else {
         this.$router.push('/');
       }

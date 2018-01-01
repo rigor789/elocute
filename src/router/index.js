@@ -4,6 +4,7 @@ import Home from '@/components/Home';
 import About from '@/components/About';
 import Auth from '@/components/Auth';
 import TeacherHome from '@/components/TeacherHome';
+import ClassroomHome from '@/components/ClassroomHome';
 
 Vue.use(Router);
 
@@ -25,9 +26,14 @@ export default new Router({
       component: Auth,
     },
     {
-      path: '/success',
+      path: '/home',
       name: 'TeacherHome',
       component: TeacherHome,
+    },
+    {
+      path: '/classroomhome/:id',
+      name: 'ClassroomHome',
+      component: ClassroomHome,
     },
   ],
 });
