@@ -7,7 +7,6 @@
 
 <script>
 import firebase from 'firebase';
-import { db } from '../utils/firebase';
 
 export default {
 	data: () => ({
@@ -16,12 +15,12 @@ export default {
 		item: {},
 	}),
 	created() {
-		this.user = firebase.auth().currentUser;
+		/*this.user = firebase.auth().currentUser;
 		this.userId = this.user.uid;
 
 		if (this.user) {
 			this.$bindAsArray('myclass', db.ref('Classrooms/' + this.userId + '/' + this.$route.params.id));
-		}
+		}*/
 	},
 	methods: {
 		/*submit() {

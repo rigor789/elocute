@@ -6,7 +6,7 @@
       </v-flex>
       <v-flex xs12>        
 				<v-card tile color="tile" class="pa-4">
-					<h1 text-xs-center>Welcome {{name}}</h1>
+					<h1 text-xs-center>Welcome {{user.displayName}}</h1>
 					<v-form v-model="valid" ref="form" lazy-validation>
 						<v-text-field
 							label="Classroom Name"
@@ -28,7 +28,7 @@
 
 	<h3 class="pa-4">My Classrooms</h3>
 
-	<v-card color="tile">			
+	<!--<v-card color="tile">			
 		<v-layout row wrap color="tile">
             <v-flex
               xs4
@@ -41,21 +41,25 @@
               </v-card>
             </v-flex>
           </v-layout>
-		</v-card>
+		</v-card>-->
   </v-container>	
 </template>
 
 <script>
-import firebase from 'firebase';
-import { db } from '../utils/firebase';
+import Firebase from 'firebase';
 
 export default {
+	computed: {
+		user() {
+			return this.$store.getters.getUser;
+		},
+	},
 	data: () => ({
 		valid: true,
 		userId: '',
 		name: '',
 		email: '',
-		user: {},
+		//user: {},
 		item: {},
 		classroomName: '',
 		classroomNameRules: [
@@ -64,25 +68,29 @@ export default {
 		],
 	}),
 	created() {
-		this.user = firebase.auth().currentUser;
+		/*this.user = firebase.auth().currentUser;
 		if (this.user) {
 			this.name = this.user.displayName;
 			this.email = this.user.email;
 			this.userId = this.user.uid;
 			this.$bindAsArray('classrooms', db.ref('Classrooms/' + this.userId));
-		}
+		}*/
 	},
 	methods: {
 		logOut() {
-			firebase.auth().signOut();
+			Firebase.auth()
+				.signOut()
+				.then(() => {
+					this.$router.replace('Auth');
+				});
 		},
 		submit() {
-			let classroom = db.ref('Classrooms/' + this.userId);
+			/*let classroom = db.ref('Classrooms/' + this.userId);
 			if (this.$refs.form.validate()) {
 				classroom.push({
 					ClassName: this.classroomName,
 				});
-			}
+			}*/
 		},
 	},
 };

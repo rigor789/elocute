@@ -60,6 +60,14 @@ export default {
 			],
 		};
 	},
+	methods: {
+		setUser: function() {
+			this.$store.dispatch('setUser');
+		},
+	},
+	created() {
+		this.setUser();
+	},
 };
 </script>
 

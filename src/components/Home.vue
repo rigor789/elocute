@@ -36,10 +36,8 @@
 </template>
 
 <script>
-import router from '../router';
 export default {
 	name: 'EloCute',
-	router,
 	data() {
 		return {
 			msg: 'Welcome to EloCute',
@@ -47,7 +45,7 @@ export default {
 	},
 	methods: {
 		auth() {
-			router.push('Auth');
+			this.$router.push('/auth');
 		},
 	},
 };

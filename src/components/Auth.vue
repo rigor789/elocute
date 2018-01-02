@@ -8,13 +8,18 @@ import firebaseui from 'firebaseui';
 export default {
 	name: 'auth',
 	mounted() {
-		var uiConfig = {
+		const uiConfig = {
 			signInSuccessUrl: '/',
 			signInOptions: [firebase.auth.EmailAuthProvider.PROVIDER_ID],
 			credentialHelper: firebaseui.auth.CredentialHelper.NONE,
 		};
-		var ui = new firebaseui.auth.AuthUI(firebase.auth());
-		ui.start('#firebaseui-auth-container', uiConfig);
+		if (firebaseui.auth.AuthUI.getInstance()) {
+			const ui = firebaseui.auth.AuthUI.getInstance();
+			ui.start('#firebaseui-auth-container', uiConfig);
+		} else {
+			const ui = new firebaseui.auth.AuthUI(firebase.auth());
+			ui.start('#firebaseui-auth-container', uiConfig);
+		}
 	},
 };
 </script>

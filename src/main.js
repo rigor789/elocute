@@ -2,19 +2,34 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue';
 import App from './App';
-import router from './router';
+import VueRouter from 'vue-router';
+import routes from './router/routes';
 import Vuetify from 'vuetify';
-import VueFire from 'vuefire';
-import firebase from 'firebase';
-import { connection } from './utils/firebase';
+import { store } from './store/store';
+import Firebase from 'firebase';
 import firebaseui from 'firebaseui';
 import 'firebaseui/dist/firebaseui.css';
+//import { isNonNullObject } from '@firebase/util';
 
-Vue.config.productionTip = false;
+const config = {
+  apiKey: 'AIzaSyAUfOahJXp1Q5Z0JMzUDdRoqCRAaU6fxao',
+  authDomain: 'elocuteme.firebaseapp.com',
+  databaseURL: 'https://elocuteme.firebaseio.com',
+  projectId: 'elocuteme',
+  storageBucket: 'elocuteme.appspot.com',
+  messagingSenderId: '262790300546',
+};
 
-Vue.use(VueFire);
+Firebase.initializeApp(config);
 
-Vue.use(router);
+//Vue.config.productionTip = false;
+
+Vue.use(VueRouter);
+
+const router = new VueRouter({
+  routes: routes,
+  mode: 'history',
+});
 
 Vue.use(Vuetify, {
   theme: {
@@ -25,19 +40,21 @@ Vue.use(Vuetify, {
     tile: '#F3F3F3',
   },
 });
-/* eslint-disable no-new */
-new Vue({
-  el: '#app',
-  router,
-  created() {
-    connection.auth().onAuthStateChanged(user => {
-      if (user) {
-        this.$router.push('/home');
-      } else {
-        this.$router.push('/');
-      }
-    });
-  },
-  template: '<App/>',
-  components: { App },
+
+router.beforeEach((to, from, next) => {
+  const currentUser = Firebase.auth().currentUser;
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+
+  if (requiresAuth && !currentUser) next('login');
+  else if (!requiresAuth && currentUser) next('home');
+  else next();
+});
+
+Firebase.auth().onAuthStateChanged(function(user) {
+  new Vue({
+    el: '#app',
+    store: store,
+    router: router,
+    render: h => h(App),
+  });
 });
