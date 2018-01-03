@@ -18,7 +18,8 @@
     "firebaseui": "^2.5.1",
     "vue": "^2.5.13",
     "vue-router": "^3.0.1",
-    "vuetify": "^0.17.5"
+    "vuetify": "^0.17.5",
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.2.3",
@@ -98,5 +99,9 @@
     "node": ">= 4.0.0",
     "npm": ">= 3.0.0"
   },
-  "browserslist": ["> 1%", "last 2 versions", "not ie <= 8"]
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ]
 }

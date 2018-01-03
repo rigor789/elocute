@@ -28,35 +28,41 @@
 
 	<h3 class="pa-4">My Classrooms</h3>
 
-	<!--<v-card color="tile">			
+  <v-card color="tile">			
 		<v-layout row wrap color="tile">
-            <v-flex
+			<v-flex
               xs4
               v-for="(item, key) in classrooms"
               :key="key"
             >
               <v-card flat tile>
+								
                 <h3><router-link :to="{ name: 'ClassroomHome', params: { id: item['.key']}}">{{item.ClassName}}</router-link></h3>
                
               </v-card>
             </v-flex>
           </v-layout>
-		</v-card>-->
+		</v-card>
   </v-container>	
 </template>
 
 <script>
-import Firebase from 'firebase';
+import firebase from 'firebase';
+//import { mapGetters } from 'vuex';
 
 export default {
 	computed: {
+		//...mapGetters(['isLoading']),
+		classrooms: function() {
+			return this.$store.dispatch('getClassrooms');
+		},
 		user() {
 			return this.$store.getters.getUser;
 		},
 	},
 	data: () => ({
 		valid: true,
-		userId: '',
+		//userId: '',
 		name: '',
 		email: '',
 		//user: {},
@@ -67,18 +73,10 @@ export default {
 			v => v.length <= 20 || 'Name must be fewer than 20 characters',
 		],
 	}),
-	created() {
-		/*this.user = firebase.auth().currentUser;
-		if (this.user) {
-			this.name = this.user.displayName;
-			this.email = this.user.email;
-			this.userId = this.user.uid;
-			this.$bindAsArray('classrooms', db.ref('Classrooms/' + this.userId));
-		}*/
-	},
 	methods: {
 		logOut() {
-			Firebase.auth()
+			firebase
+				.auth()
 				.signOut()
 				.then(() => {
 					this.$router.replace('Auth');

@@ -1,12 +1,13 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import Firebase from 'firebase';
+import firebase from 'firebase';
 
 Vue.use(Vuex);
 
 export const store = new Vuex.Store({
   state: {
     user: null,
+    classrooms: [],
   },
   getters: {
     getUser: state => {
@@ -15,12 +16,43 @@ export const store = new Vuex.Store({
   },
   mutations: {
     setUser: state => {
-      state.user = Firebase.auth().currentUser;
+      state.user = firebase.auth().currentUser;
+    },
+    updateSavedData: (state, data) => {
+      state.classrooms = data;
     },
   },
   actions: {
+    //set the user, get the classrooms
     setUser: context => {
       context.commit('setUser');
+    },
+    getClassrooms: context => {
+      firebase
+        .database()
+        .ref('Classrooms/' + context.state.user.uid)
+        .once('value')
+        .then(data => {
+          const classrooms = [];
+          const obj = data.val();
+          for (var key in obj) {
+            classrooms.push({
+              id: key,
+              ClassName: obj[key].ClassName,
+            });
+          }
+          //return classrooms;
+          context.commit('updateSavedData', classrooms);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    createClassroom(context, payload) {
+      firebase
+        .database()
+        .ref('Classrooms/' + context.state.user.uid)
+        .push(payload);
     },
   },
 });

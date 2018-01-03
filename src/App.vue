@@ -64,9 +64,13 @@ export default {
 		setUser: function() {
 			this.$store.dispatch('setUser');
 		},
+		getClassrooms: function() {
+			this.$store.dispatch('getClassrooms');
+		},
 	},
 	created() {
 		this.setUser();
+		this.getClassrooms();
 	},
 };
 </script>

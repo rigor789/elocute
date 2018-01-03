@@ -1,40 +1,57 @@
+import Vue from 'vue';
+import Router from 'vue-router';
+
 import Home from '@/components/Home';
 import About from '@/components/About';
 import Auth from '@/components/Auth';
 import TeacherHome from '@/components/TeacherHome';
 import ClassroomHome from '@/components/ClassroomHome';
 
-export const routes = [
-  {
-    path: '/',
-    name: 'Welcome',
-    component: Home,
-  },
-  {
-    path: '/about',
-    name: 'About',
-    component: About,
-  },
-  {
-    path: '/auth',
-    name: 'Login',
-    component: Auth,
-  },
-  {
-    path: '/home',
-    name: 'TeacherHome',
-    component: TeacherHome,
-    meta: {
-      requiresAuth: true,
+import firebase from 'firebase';
+
+Vue.use(Router);
+
+let router = new Router({
+  routes: [
+    {
+      path: '/',
+      name: 'landing',
+      component: Home,
     },
-  },
-  {
-    path: '/classroomhome/:id',
-    name: 'ClassroomHome',
-    component: ClassroomHome,
-    meta: {
-      requiresAuth: true,
+    {
+      path: '/about',
+      name: 'about',
+      component: About,
     },
-  },
-];
-export default routes;
+    {
+      path: '/auth',
+      name: 'login',
+      component: Auth,
+    },
+    {
+      path: '/home',
+      name: 'home',
+      component: TeacherHome,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/classroomhome/:id',
+      name: 'classrooms',
+      component: ClassroomHome,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+  ],
+});
+router.beforeEach((to, from, next) => {
+  let currentUser = firebase.auth().currentUser;
+  let requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+
+  if (requiresAuth && !currentUser) next('auth');
+  else if (!requiresAuth && currentUser) next('home');
+  else next();
+});
+export default router;
