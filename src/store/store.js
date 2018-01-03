@@ -68,11 +68,11 @@ export const store = new Vuex.Store({
           context.dispatch('getClassrooms');
         });
     },
-    createUser(context, payload) {
+    updateUser(context, payload) {
       return firebase
         .database()
-        .ref('Users')
-        .push(payload);
+        .ref('Users/' + payload.id)
+        .set(payload);
     },
   },
 });

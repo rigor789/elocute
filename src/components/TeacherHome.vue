@@ -85,7 +85,16 @@ export default {
 				});
 		},
 		getClassrooms: function() {
-			this.$store.dispatch('getClassrooms');
+			this.$store.dispatch('getClassrooms').then(() => {
+				this.updateUser();
+			});
+		},
+		updateUser: function() {
+			this.$store.dispatch('updateUser', {
+				Email: this.user.email,
+				DisplayName: this.user.displayName,
+				id: this.user.uid,
+			});
 		},
 		submit() {
 			this.$store
