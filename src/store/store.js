@@ -52,10 +52,13 @@ export const store = new Vuex.Store({
         });
     },
     createClassroom(context, payload) {
-      firebase
+      return firebase
         .database()
         .ref('Classrooms/' + context.state.user.uid)
-        .push(payload);
+        .push(payload)
+        .then(data => {
+          context.dispatch('getClassrooms');
+        });
     },
   },
 });
