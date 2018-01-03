@@ -4,7 +4,6 @@
 <v-navigation-drawer
     v-model="sideNav"
     enable-resize-watcher
-    disable-route-watcher
     left
     absolute
     temporary
