@@ -6,6 +6,7 @@ import router from './router/routes';
 import Vuetify from 'vuetify';
 import { store } from './store/store';
 import firebase from 'firebase';
+import admin from 'firebase-admin';
 import firebaseui from 'firebaseui';
 import 'firebaseui/dist/firebaseui.css';
 //import { isNonNullObject } from '@firebase/util';
@@ -18,6 +19,13 @@ const config = {
   storageBucket: 'elocuteme.appspot.com',
   messagingSenderId: '262790300546',
 };
+
+const serviceAccount = require('./assets/admin/elocute-service-key.json');
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: 'https://elocuteme.firebaseio.com',
+});
 
 Vue.config.productionTip = false;
 

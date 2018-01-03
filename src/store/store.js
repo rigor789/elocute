@@ -33,7 +33,6 @@ export const store = new Vuex.Store({
     },
   },
   actions: {
-    //set the user, get the classrooms
     setUser: context => {
       context.commit('setUser');
     },
@@ -69,14 +68,11 @@ export const store = new Vuex.Store({
           context.dispatch('getClassrooms');
         });
     },
-    createStudent(context, payload) {
+    createUser(context, payload) {
       return firebase
         .database()
-        .ref('Classrooms/' + context.state.user.uid + '/' + context.state.classroom.id)
-        .push(payload)
-        .then(data => {
-          context.dispatch('getClassroom');
-        });
+        .ref('Users')
+        .push(payload);
     },
   },
 });
