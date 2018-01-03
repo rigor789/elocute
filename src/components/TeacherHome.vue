@@ -53,65 +53,61 @@
 </template>
 
 <script>
-  import firebase from 'firebase';
-	import {mapGetters} from 'vuex';
+import firebase from 'firebase';
+import { mapGetters } from 'vuex';
 
-	export default {
-		computed: {
-			...mapGetters({
-				user: 'getUser',
-				classrooms: 'getClassrooms'
-			}),
+export default {
+	computed: {
+		...mapGetters({
+			user: 'getUser',
+			classrooms: 'getClassrooms'
+		})
+	},
+	data: () => ({
+		valid: true,
+		// userId: '',
+		// name: '',
+		// email: '',
+		//user: {},
+		item: {},
+		// classrooms: {},
+		classroomName: '',
+		classroomNameRules: [
+			v => !!v || 'Classroom name is required',
+			v => v.length <= 20 || 'Name must be fewer than 20 characters'
+		]
+	}),
+	created() {
+		this.getClassrooms();
+	},
+	methods: {
+		logOut() {
+			firebase
+				.auth()
+				.signOut()
+				.then(() => {
+					this.$router.replace('Auth');
+				});
 		},
-		data: () => ({
-			valid: true,
-			// userId: '',
-			// name: '',
-			// email: '',
-			//user: {},
-			item: {},
-			// classrooms: {},
-			classroomName: '',
-			classroomNameRules: [
-				v => !!v || 'Classroom name is required',
-				v => v.length <= 20 || 'Name must be fewer than 20 characters',
-			],
-		}),
-		created() {
-			this.getClassrooms();
-		}
-		,
-		methods: {
-			logOut() {
-				firebase
-					.auth()
-					.signOut()
-					.then(() => {
-						this.$router.replace('Auth');
-					});
-			}
-			,
-			getClassrooms: function () {
-				this.$store.dispatch('getClassrooms');
-			}
-			,
-			submit() {
-				this.$store.dispatch('createClassroom', {
-					ClassName: this.classroomName,
-				}).then(() => {
+		getClassrooms: function() {
+			this.$store.dispatch('getClassrooms');
+		},
+		submit() {
+			this.$store
+				.dispatch('createClassroom', {
+					ClassName: this.classroomName
+				})
+				.then(() => {
 					// clear the form
 					this.classroomName = '';
 				});
-				// let classroom = db.ref('Classrooms/' + this.userId);
-				// if (this.$refs.form.validate()) {
-				//	 classroom.push({
-				//		 ClassName: this.classroomName,
-				//	 });
-				// }
-			}
-			,
+			// let classroom = db.ref('Classrooms/' + this.userId);
+			// if (this.$refs.form.validate()) {
+			//	 classroom.push({
+			//		 ClassName: this.classroomName,
+			//	 });
+			// }
 		}
-		,
 	}
-	;
+};
 </script>
