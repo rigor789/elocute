@@ -60,8 +60,8 @@ export default {
 	computed: {
 		...mapGetters({
 			user: 'getUser',
-			classrooms: 'getClassrooms'
-		})
+			classrooms: 'getClassrooms',
+		}),
 	},
 	data: () => ({
 		valid: true,
@@ -74,8 +74,8 @@ export default {
 		classroomName: '',
 		classroomNameRules: [
 			v => !!v || 'Classroom name is required',
-			v => v.length <= 20 || 'Name must be fewer than 20 characters'
-		]
+			v => v.length <= 20 || 'Name must be fewer than 20 characters',
+		],
 	}),
 	created() {
 		this.getClassrooms();
@@ -95,7 +95,7 @@ export default {
 		submit() {
 			this.$store
 				.dispatch('createClassroom', {
-					ClassName: this.classroomName
+					ClassName: this.classroomName,
 				})
 				.then(() => {
 					// clear the form
@@ -107,7 +107,7 @@ export default {
 			//		 ClassName: this.classroomName,
 			//	 });
 			// }
-		}
-	}
+		},
+	},
 };
 </script>
