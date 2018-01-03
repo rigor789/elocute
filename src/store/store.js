@@ -13,12 +13,15 @@ export const store = new Vuex.Store({
     getUser: state => {
       return state.user;
     },
+    getClassrooms: state => {
+      return state.classrooms;
+    },
   },
   mutations: {
     setUser: state => {
       state.user = firebase.auth().currentUser;
     },
-    updateSavedData: (state, data) => {
+    fetchClassrooms: (state, data) => {
       state.classrooms = data;
     },
   },
@@ -42,7 +45,7 @@ export const store = new Vuex.Store({
             });
           }
           //return classrooms;
-          context.commit('updateSavedData', classrooms);
+          context.commit('fetchClassrooms', classrooms);
         })
         .catch(error => {
           console.log(error);

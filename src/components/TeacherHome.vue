@@ -48,14 +48,9 @@
 
 <script>
 import firebase from 'firebase';
-//import { mapGetters } from 'vuex';
 
 export default {
 	computed: {
-		//...mapGetters(['isLoading']),
-		classrooms: function() {
-			return this.$store.dispatch('getClassrooms');
-		},
 		user() {
 			return this.$store.getters.getUser;
 		},
@@ -67,12 +62,16 @@ export default {
 		email: '',
 		//user: {},
 		item: {},
+		classrooms: {},
 		classroomName: '',
 		classroomNameRules: [
 			v => !!v || 'Classroom name is required',
 			v => v.length <= 20 || 'Name must be fewer than 20 characters',
 		],
 	}),
+	created() {
+		this.getClassrooms();
+	},
 	methods: {
 		logOut() {
 			firebase
@@ -81,6 +80,9 @@ export default {
 				.then(() => {
 					this.$router.replace('Auth');
 				});
+		},
+		getClassrooms: function() {
+			this.$store.dispatch('getClassrooms');
 		},
 		submit() {
 			/*let classroom = db.ref('Classrooms/' + this.userId);
