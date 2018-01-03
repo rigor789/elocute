@@ -53,9 +53,9 @@ export default {
 		return {
 			sideNav: false,
 			menuItems: [
-				{ icon: 'home', title: 'Home', link: '/' },
-				{ icon: 'business', title: 'About', link: '/About' },
-				{ icon: 'email', title: 'Contact Us', link: '/Contact' },
+				{ icon: 'home', title: 'Home', link: '/home' },
+				{ icon: 'business', title: 'About', link: '/about' },
+				{ icon: 'email', title: 'Contact Us', link: '/contact' },
 			],
 		};
 	},

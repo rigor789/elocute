@@ -65,12 +65,7 @@ export default {
 	},
 	data: () => ({
 		valid: true,
-		// userId: '',
-		// name: '',
-		// email: '',
-		//user: {},
 		item: {},
-		// classrooms: {},
 		classroomName: '',
 		classroomNameRules: [
 			v => !!v || 'Classroom name is required',
@@ -101,12 +96,6 @@ export default {
 					// clear the form
 					this.classroomName = '';
 				});
-			// let classroom = db.ref('Classrooms/' + this.userId);
-			// if (this.$refs.form.validate()) {
-			//	 classroom.push({
-			//		 ClassName: this.classroomName,
-			//	 });
-			// }
 		},
 	},
 };

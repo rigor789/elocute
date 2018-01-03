@@ -1,36 +1,52 @@
 <template>
-   <v-card color="tile" tile class="pa-4">
-    <h1 v-for="(item, key) in myclass"
-              :key="key">Add Students to: {{ item['.value'] }}</h1>
-  </v-card>
+	<v-container grid-list-md text-xs-center>
+   		<v-card color="tile">
+			<h3>
+				Add a Student to {{classroom.ClassName}}					
+			</h3>
+		</v-card>		
+	</v-container>
 </template>
 
 <script>
 import firebase from 'firebase';
+import { mapGetters } from 'vuex';
 
 export default {
+	computed: {
+		...mapGetters({
+			user: 'getUser',
+			classrooms: 'getClassrooms',
+			classroom: 'getClassroom',
+		}),
+	},
 	data: () => ({
-		userId: '',
-		user: {},
+		valid: true,
 		item: {},
+		studentName: '',
+		studentNameRules: [v => !!v || 'Student name is required'],
 	}),
 	created() {
-		/*this.user = firebase.auth().currentUser;
-		this.userId = this.user.uid;
-
-		if (this.user) {
-			this.$bindAsArray('myclass', db.ref('Classrooms/' + this.userId + '/' + this.$route.params.id));
-		}*/
+		this.getClassroom();
 	},
 	methods: {
-		/*submit() {
-			let classroom = db.ref('Classrooms/' + this.userId);
-			if (this.$refs.form.validate()) {
-				classroom.push({
-					ClassName: this.classroomName,
+		getClassroom: function() {
+			let classId = this.$route.params.id;
+			this.$store.dispatch('getClassroom', {
+				id: classId,
+			});
+		},
+		submit() {
+			this.$store
+				.dispatch('createStudent', {
+					StudentName: this.studentName,
+					StudentEmailAddress: this.studentName,
+				})
+				.then(() => {
+					// clear the form
+					this.classroomName = '';
 				});
-      }
-		},*/
+		},
 	},
 };
 </script>
