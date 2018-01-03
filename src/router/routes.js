@@ -38,7 +38,7 @@ let router = new Router({
     },
     {
       path: '/classroomhome/:id',
-      name: 'classrooms',
+      name: 'ClassroomHome',
       component: ClassroomHome,
       meta: {
         requiresAuth: true,
