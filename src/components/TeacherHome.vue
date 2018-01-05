@@ -100,6 +100,7 @@ export default {
 			this.$store
 				.dispatch('createClassroom', {
 					ClassName: this.classroomName,
+					TeacherId: this.user.uid,
 				})
 				.then(() => {
 					// clear the form

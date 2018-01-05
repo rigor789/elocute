@@ -23,15 +23,35 @@
 					</v-form>
 				</v-card>
 				
-				<v-card tile  class="pa-4">
+				<v-card v-if="student.DisplayName" tile class="pa-4">
 					<h3>{{student.DisplayName}}</h3>
 					<v-btn class="info"
 						@click="add"
-						:disabled="!valid"
 					>
 					Add to Class
-					</v-btn>							
-				</v-card>		
+					</v-btn>
+										
+				</v-card>
+				<h3 class="pa-4">Enrolled Students</h3>
+
+				<v-card color="tile">
+					<v-layout row wrap color="tile">
+						<v-flex xs4
+								v-for="item in students"
+								:key="item.id"
+						>
+							<v-card flat tile>
+
+								<h3>
+									{{item.StudentName}}
+									
+								</h3>
+
+							</v-card>
+						</v-flex>
+					</v-layout>
+				</v-card>
+
 			</v-flex>
 		</v-layout>		
 	</v-container>
@@ -48,6 +68,7 @@ export default {
 			classrooms: 'getClassrooms',
 			classroom: 'getClassroom',
 			student: 'getStudent',
+			students: 'getStudents',
 		}),
 	},
 	data: () => ({
@@ -62,7 +83,19 @@ export default {
 	methods: {
 		getClassroom() {
 			let classId = this.$route.params.id;
-			this.$store.dispatch('getClassroom', {
+			this.$store
+				.dispatch('getClassroom', {
+					id: classId,
+				})
+				.then(() => {
+					this.$store.dispatch('getStudents', {
+						id: classId,
+					});
+				});
+		},
+		getStudents() {
+			let classId = this.$route.params.id;
+			this.$store.dispatch('getStudents', {
 				id: classId,
 			});
 		},
@@ -72,11 +105,23 @@ export default {
 			});
 		},
 		add() {
-			let classId = this.$route.params.id;
-			this.$store.dispatch('addStudentToClass', {
-				studentId: this.id,
-				classId: classId,
-			});
+			let classId = this.classroom.id;
+			let className = this.classroom.ClassName;
+			let studentId = this.student.id;
+			let studentName = this.student.DisplayName;
+			this.$store
+				.dispatch('associateClassToStudent', {
+					studentId: studentId,
+					classId: classId,
+					className: className,
+				})
+				.then(() => {
+					this.$store.dispatch('associateStudentToClass', {
+						studentId: studentId,
+						classId: classId,
+						studentName: studentName,
+					});
+				});
 		},
 	},
 };
