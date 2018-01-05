@@ -11,7 +11,7 @@ export const store = new Vuex.Store({
     classroom: [],
     student: [],
     students: [],
-    assignment: [],
+    assignments: [],
   },
   getters: {
     getUser: state => {
@@ -29,6 +29,9 @@ export const store = new Vuex.Store({
     getStudents: state => {
       return state.students;
     },
+    getAssignments: state => {
+      return state.assignments;
+    },
   },
   mutations: {
     setUser: state => {
@@ -45,6 +48,9 @@ export const store = new Vuex.Store({
     },
     setStudents: (state, data) => {
       state.students = data;
+    },
+    setAssignments: (state, data) => {
+      state.assignments = data;
     },
     clearStudent: state => {
       state.student = [];
@@ -91,6 +97,25 @@ export const store = new Vuex.Store({
           context.commit('setStudents', students);
         });
     },
+    getAssignments(context, payload) {
+      firebase
+        .database()
+        .ref('Assignments')
+        .orderByChild('ClassId')
+        .equalTo(payload.id)
+        .once('value', function(data) {
+          const assignments = [];
+          const obj = data.val();
+          for (var key in obj) {
+            assignments.push({
+              id: key,
+              Title: obj[key].Title,
+              Text: obj[key].Text,
+            });
+          }
+          context.commit('setAssignments', assignments);
+        });
+    },
     createClassroom(context, payload) {
       return firebase
         .database()
@@ -98,6 +123,15 @@ export const store = new Vuex.Store({
         .push(payload)
         .then(data => {
           context.dispatch('getClassrooms');
+        });
+    },
+    createAssignment(context, payload) {
+      return firebase
+        .database()
+        .ref('Assignments')
+        .push(payload)
+        .then(data => {
+          context.dispatch('getAssignments');
         });
     },
     findUser(context, payload) {

@@ -35,7 +35,7 @@
 				<h3 class="pa-4">Enrolled Students</h3>
 
 				<v-card color="tile">
-					<v-layout row wrap color="tile">
+					<v-layout row wrap color="tile" class="pa-4">
 						<v-flex xs4
 								v-for="item in students"
 								:key="item.id"
@@ -46,6 +46,52 @@
 									{{item.StudentName}}
 									
 								</h3>
+
+							</v-card>
+						</v-flex>
+					</v-layout>
+				</v-card>
+
+				<h3 class="pa-4">Add an Assignment</h3>
+
+				<v-card tile color="tile" class="pa-4">
+					<v-form v-model="valid" ref="form" lazy-validation>
+						<v-text-field
+								label="Assignment Title"
+								v-model="assignmentTitle"
+								:rules="assignmentTitleRules"
+								required
+						></v-text-field>
+						<v-text-field
+								label="Text"
+								v-model="assignmentText"
+								:rules="assignmentTextRules"
+								multiline
+								required
+						></v-text-field>
+						<v-btn class="info"
+							   @click="create"
+							   :disabled="!valid"
+						>
+							Create Assignment
+						</v-btn>
+					</v-form>
+				</v-card>
+
+				<h3 class="pa-4">Assignments</h3>
+
+				<v-card color="tile">
+					<v-layout row wrap color="tile" class="pa-4">
+						<v-flex xs4
+								v-for="item in assignments"
+								:key="item.id"
+						>
+							<v-card flat tile>
+
+								<h3>
+									{{item.Title}}	
+								</h3>
+								<p>{{item.Text}}</p>
 
 							</v-card>
 						</v-flex>
@@ -69,6 +115,7 @@ export default {
 			classroom: 'getClassroom',
 			student: 'getStudent',
 			students: 'getStudents',
+			assignments: 'getAssignments',
 		}),
 	},
 	data: () => ({
@@ -76,6 +123,10 @@ export default {
 		item: {},
 		studentEmail: '',
 		studentEmailRules: [v => !!v || 'Student email address is required'],
+		assignmentTitle: '',
+		assignmentTitleRules: [v => !!v || 'Assignment Title is required'],
+		assignmentText: '',
+		assignmentTextRules: [v => !!v || 'Assignment Text is required'],
 	}),
 	created() {
 		this.getClassroom();
@@ -91,11 +142,22 @@ export default {
 					this.$store.dispatch('getStudents', {
 						id: classId,
 					});
+				})
+				.then(() => {
+					this.$store.dispatch('getAssignments', {
+						id: classId,
+					});
 				});
 		},
 		getStudents() {
 			let classId = this.$route.params.id;
 			this.$store.dispatch('getStudents', {
+				id: classId,
+			});
+		},
+		getAssignments() {
+			let classId = this.$route.params.id;
+			this.$store.dispatch('getAssignments', {
 				id: classId,
 			});
 		},
@@ -122,6 +184,14 @@ export default {
 						studentName: studentName,
 					});
 				});
+		},
+		create() {
+			let classId = this.classroom.id;
+			this.$store.dispatch('createAssignment', {
+				ClassId: classId,
+				Title: this.assignmentTitle,
+				Text: this.assignmentText,
+			});
 		},
 	},
 };

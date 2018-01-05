@@ -29,7 +29,7 @@
     <router-link to="/"><img src="./assets/images/seal.png" height="50px"></router-link>
     <v-toolbar-title>EloCute: For Language Teachers and Students</v-toolbar-title>
     </v-toolbar>
-    <v-container grid-list-md text-xs-center>
+    <v-container grid-list-md text-xs-center  class="pb-5">
     <v-layout row wrap>
       <v-flex xs12>
         <router-view/>
