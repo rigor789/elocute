@@ -22,6 +22,16 @@
 						</v-btn>
 					</v-form>
 				</v-card>
+				
+				<v-card tile  class="pa-4">
+					<h3>{{student.DisplayName}}</h3>
+					<v-btn class="info"
+						@click="add"
+						:disabled="!valid"
+					>
+					Add to Class
+					</v-btn>							
+				</v-card>		
 			</v-flex>
 		</v-layout>		
 	</v-container>
@@ -37,6 +47,7 @@ export default {
 			user: 'getUser',
 			classrooms: 'getClassrooms',
 			classroom: 'getClassroom',
+			student: 'getStudent',
 		}),
 	},
 	data: () => ({
@@ -49,22 +60,23 @@ export default {
 		this.getClassroom();
 	},
 	methods: {
-		getClassroom: function() {
+		getClassroom() {
 			let classId = this.$route.params.id;
 			this.$store.dispatch('getClassroom', {
 				id: classId,
 			});
 		},
 		search() {
-			/*this.$store
-				.dispatch('createStudent', {
-					StudentName: this.studentName,
-					StudentEmailAddress: this.studentName,
-				})
-				.then(() => {
-					// clear the form
-					this.classroomName = '';
-				});*/
+			this.$store.dispatch('findUser', {
+				Email: this.studentEmail,
+			});
+		},
+		add() {
+			let classId = this.$route.params.id;
+			this.$store.dispatch('addStudentToClass', {
+				studentId: this.id,
+				classId: classId,
+			});
 		},
 	},
 };

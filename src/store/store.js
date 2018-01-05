@@ -9,6 +9,7 @@ export const store = new Vuex.Store({
     user: null,
     classrooms: [],
     classroom: [],
+    student: [],
   },
   getters: {
     getUser: state => {
@@ -20,6 +21,9 @@ export const store = new Vuex.Store({
     getClassroom: state => {
       return state.classroom;
     },
+    getStudent: state => {
+      return state.student;
+    },
   },
   mutations: {
     setUser: state => {
@@ -30,6 +34,9 @@ export const store = new Vuex.Store({
     },
     setClassroom: (state, data) => {
       state.classroom = state.classrooms.find(classroom => classroom.id === data);
+    },
+    setStudent: (state, data) => {
+      state.student = data;
     },
   },
   actions: {
@@ -68,11 +75,32 @@ export const store = new Vuex.Store({
           context.dispatch('getClassrooms');
         });
     },
-    updateUser(context, payload) {
+    findUser(context, payload) {
+      return firebase
+        .database()
+        .ref('Users')
+        .orderByChild('Email')
+        .equalTo(payload.Email)
+        .on('child_added', function(data) {
+          const student = [];
+          const obj = data.val();
+          (student.id = obj.id), (student.DisplayName = obj.DisplayName), (student.Email = obj.Email);
+          context.commit('setStudent', student);
+        });
+    },
+    updateUser(payload) {
       return firebase
         .database()
         .ref('Users/' + payload.id)
         .set(payload);
+    },
+    addStudentToClass(payload) {
+      return firebase
+        .database()
+        .ref('Users/' + payload.state.student.id)
+        .update({
+          Class: payload.state.classroom.id,
+        });
     },
   },
 });
