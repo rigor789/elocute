@@ -43,7 +43,11 @@
 							<v-card flat tile>
 
 								<h3>
-									{{item.StudentName}}
+									<router-link :to="{
+										name: 'StudentHome',
+										params: { id: item.id }
+							 			}">{{item.StudentName}}
+									</router-link>
 									
 								</h3>
 
