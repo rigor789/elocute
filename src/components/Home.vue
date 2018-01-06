@@ -7,7 +7,7 @@
           <v-flex d-flex>
             <v-card color="tile" class="pa-4">
               <v-avatar :tile="true"
-              :size="100"><img src="../assets/images/logo.png"></v-avatar>         
+              size="100"><img src="../assets/images/logo.png"></v-avatar>
                 <h1 title>{{ msg }}</h1>
                 <h2>Perfect your spoken language skills with EloCute, 
                   a web site for teachers with a companion mobile app for their students.</h2>                     

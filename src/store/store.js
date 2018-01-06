@@ -7,164 +7,133 @@ Vue.use(Vuex);
 export const store = new Vuex.Store({
   state: {
     user: null,
-    classroom: [],
-    classrooms: [],
-    student: [],
+    student: null,
     students: [],
-    assignment: [],
+    classrooms: [],
     assignments: [],
+    activeClassroom: null,
+    activeAssignment: null,
   },
   getters: {
-    getUser: state => {
-      return state.user;
+    classroom: state => {
+      return state.classrooms.find(classroom => classroom.id === state.activeClassroom)
     },
-    getClassroom: state => {
-      console.log('getting croom');
-      return state.classroom;
-    },
-    getClassrooms: state => {
-      return state.classrooms;
-    },
-    getStudent: state => {
-      return state.student;
-    },
-    getStudents: state => {
-      return state.students;
-    },
-    getAssignment: state => {
-      return state.assignment;
-    },
-    getAssignments: state => {
-      return state.assignments;
-    },
+    assignment: state => {
+      return state.assignments.find(assignment => assignment.id === state.activeAssignment)
+    }
   },
   mutations: {
-    setUser: state => {
-      state.user = firebase.auth().currentUser;
+    setUser: (state, user) => {
+      state.user = user;
     },
-    setClassrooms: (state, data) => {
-      state.classrooms = data;
+    setActiveClassroom: (state, id) => {
+      state.activeClassroom = id;
     },
-    setClassroom: (state, data) => {
-      state.classroom = state.classrooms.find(classroom => classroom.id === data);
+    setActiveAssignment: (state, id) => {
+      state.activeAssignment = id;
     },
-    setAssignment: (state, data) => {
-      state.assignment = state.assignments.find(assignment => assignment.id === data);
+    setStudent: (state, student) => {
+      state.student = student;
     },
-    setStudent: (state, data) => {
-      state.student = data;
+    setClassrooms: (state, classrooms) => {
+      state.classrooms = classrooms;
     },
-    setStudents: (state, data) => {
-      state.students = data;
+    setAssignments: (state, assignments) => {
+      state.assignments = assignments;
     },
-    setAssignments: (state, data) => {
-      state.assignments = data;
+    setStudents: (state, students) => {
+      state.students = students;
     },
     clearStudent: state => {
-      state.student = [];
+      state.student = null;
     },
   },
   actions: {
-    setUser: context => {
-      context.commit('setUser');
-    },
-    getClassroom(context, payload) {
-      context.commit('setClassroom', payload.id);
-    },
-    getAssignment(context, payload) {
-      context.commit('setAssignment', payload.id);
-    },
-    getClassrooms: context => {
+    fetchClassrooms: ({state, commit}) => {
       firebase
         .database()
         .ref('Classrooms')
         .orderByChild('TeacherId')
-        .equalTo(context.state.user.uid)
-        .once('value', function(data) {
-          const classrooms = [];
+        .equalTo(state.user.uid)
+        .once('value', function (data) {
           const obj = data.val();
-          for (var key in obj) {
-            classrooms.push({
-              id: key,
-              ClassName: obj[key].ClassName,
-            });
-          }
-          context.commit('setClassrooms', classrooms);
+          const classrooms = Object.keys(obj || {}).map(key => ({
+            id: key,
+            ClassName: obj[key].ClassName,
+          }));
+          commit('setClassrooms', classrooms);
         });
     },
-    getStudents(context, payload) {
+    fetchStudents({commit}, classId) {
       firebase
         .database()
-        .ref('Classrooms/' + payload.id + '/Students')
-        .on('value', function(data) {
-          const students = [];
+        .ref('Classrooms/' + classId + '/Students')
+        .on('value', function (data) {
           const obj = data.val();
-          for (var key in obj) {
-            students.push({
-              id: key,
-              StudentName: obj[key].DisplayName,
-            });
-          }
-          context.commit('setStudents', students);
+          const students = Object.keys(obj || {}).map(key => ({
+            id: key,
+            StudentName: obj[key].DisplayName
+          }));
+          commit('setStudents', students);
         });
     },
-    getAssignments(context, payload) {
+    fetchAssignments({commit}, classId) {
       firebase
         .database()
         .ref('Assignments')
         .orderByChild('ClassId')
-        .equalTo(payload.id)
-        .once('value', function(data) {
-          const assignments = [];
+        .equalTo(classId)
+        .once('value', function (data) {
           const obj = data.val();
-          for (var key in obj) {
-            assignments.push({
-              id: key,
-              Title: obj[key].Title,
-              Text: obj[key].Text,
-            });
-          }
-          context.commit('setAssignments', assignments);
+          const assignments = Object.keys(obj || {}).map(key => ({
+            id: key,
+            Title: obj[key].Title,
+            Text: obj[key].Text,
+          }));
+          commit('setAssignments', assignments);
         });
     },
-    createClassroom(context, payload) {
+    createClassroom({dispatch}, payload) {
       return firebase
         .database()
         .ref('Classrooms')
         .push(payload)
         .then(data => {
-          context.dispatch('getClassrooms');
+          dispatch('fetchClassrooms');
         });
     },
-    createAssignment(context, payload) {
+    createAssignment({dispatch}, payload) {
       return firebase
         .database()
         .ref('Assignments')
         .push(payload)
         .then(data => {
-          context.dispatch('getAssignments');
+          dispatch('fetchAssignments', payload.ClassId);
         });
     },
-    findUser(context, payload) {
+    findUser({commit}, payload) {
       return firebase
         .database()
         .ref('Users')
         .orderByChild('Email')
         .equalTo(payload.Email)
-        .on('child_added', function(data) {
-          const student = [];
+        .on('child_added', function (data) {
           const obj = data.val();
-          (student.id = obj.id), (student.DisplayName = obj.DisplayName), (student.Email = obj.Email);
-          context.commit('setStudent', student);
+          const student = {
+            id: obj.id,
+            DisplayName: obj.DisplayName,
+            Email: obj.Email
+          };
+          commit('setStudent', student);
         });
     },
-    updateUser(context, payload) {
+    updateUser({dispatch}, payload) {
       return firebase
         .database()
         .ref('Users/' + payload.id)
         .update(payload)
         .then(data => {
-          context.dispatch('getStudents');
+          dispatch('fetchStudents');
         });
     },
     associateClassToStudent(context, payload) {
@@ -175,17 +144,17 @@ export const store = new Vuex.Store({
           ClassName: payload.className,
         });
     },
-    associateStudentToClass(context, payload) {
+    associateStudentToClass({commit, dispatch}, payload) {
       return firebase
         .database()
         .ref('Classrooms/' + payload.classId + '/Students/' + payload.studentId)
         .update({
           DisplayName: payload.studentName,
         })
-        .then(context.commit('clearStudent'))
-        .then(context.dispatch('getStudents'));
+        .then(commit('clearStudent'))
+        .then(dispatch('fetchStudents', payload.classId));
     },
-    addAssignmentToClass(payload) {
+    addAssignmentToClass(context, payload) {
       return firebase
         .database()
         .ref('Classrooms/' + payload.classId + '/Assignments')

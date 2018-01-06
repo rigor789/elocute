@@ -33,6 +33,8 @@ Vue.use(Vuetify, {
 
 firebase.initializeApp(config);
 firebase.auth().onAuthStateChanged(function(user) {
+  store.commit('setUser', user);
+
   new Vue({
     el: '#app',
     store: store,
