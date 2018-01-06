@@ -7,8 +7,8 @@ Vue.use(Vuex);
 export const store = new Vuex.Store({
   state: {
     user: null,
-    classrooms: [],
     classroom: [],
+    classrooms: [],
     student: [],
     students: [],
     assignment: [],
@@ -18,11 +18,11 @@ export const store = new Vuex.Store({
     getUser: state => {
       return state.user;
     },
-    getClassrooms: state => {
-      return state.classrooms;
-    },
     getClassroom: state => {
       return state.classroom;
+    },
+    getClassrooms: state => {
+      return state.classrooms;
     },
     getStudent: state => {
       return state.student;
@@ -30,11 +30,11 @@ export const store = new Vuex.Store({
     getStudents: state => {
       return state.students;
     },
-    getAssignments: state => {
-      return state.assignments;
-    },
     getAssignment: state => {
       return state.assignment;
+    },
+    getAssignments: state => {
+      return state.assignments;
     },
   },
   mutations: {
@@ -68,6 +68,7 @@ export const store = new Vuex.Store({
       context.commit('setUser');
     },
     getClassroom(context, payload) {
+      console.log(payload.id);
       context.commit('setClassroom', payload.id);
     },
     getAssignment(context, payload) {

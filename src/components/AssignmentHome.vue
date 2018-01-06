@@ -1,7 +1,7 @@
 <template>
    <v-card color="tile" tile class="pa-4">
     <h1>{{assignment.Title}}</h1> 
-    <p align="left">{{assignment.Text}}</p>  
+    <p align="left"><pre>{{assignment.Text}}</pre></p>  
   </v-card>
 </template>
 
