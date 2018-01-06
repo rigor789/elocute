@@ -89,10 +89,14 @@
 							<v-card flat tile>
 
 								<h3>
-									{{item.Title}}	
+									<router-link :to="{
+										name: 'AssignmentHome',
+										params: { id: item.id }
+							 			}">
+										 {{item.Title}}	
+									</router-link>
 								</h3>
-								<p>{{item.Text}}</p>
-
+								
 							</v-card>
 						</v-flex>
 					</v-layout>

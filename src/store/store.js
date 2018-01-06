@@ -11,6 +11,7 @@ export const store = new Vuex.Store({
     classroom: [],
     student: [],
     students: [],
+    assignment: [],
     assignments: [],
   },
   getters: {
@@ -32,6 +33,9 @@ export const store = new Vuex.Store({
     getAssignments: state => {
       return state.assignments;
     },
+    getAssignment: state => {
+      return state.assignment;
+    },
   },
   mutations: {
     setUser: state => {
@@ -42,6 +46,9 @@ export const store = new Vuex.Store({
     },
     setClassroom: (state, data) => {
       state.classroom = state.classrooms.find(classroom => classroom.id === data);
+    },
+    setAssignment: (state, data) => {
+      state.assignment = state.assignments.find(assignment => assignment.id === data);
     },
     setStudent: (state, data) => {
       state.student = data;
@@ -62,6 +69,9 @@ export const store = new Vuex.Store({
     },
     getClassroom(context, payload) {
       context.commit('setClassroom', payload.id);
+    },
+    getAssignment(context, payload) {
+      context.commit('setAssignment', payload.id);
     },
     getClassrooms: context => {
       firebase

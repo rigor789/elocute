@@ -6,6 +6,7 @@ import About from '@/components/About';
 import Auth from '@/components/Auth';
 import TeacherHome from '@/components/TeacherHome';
 import ClassroomHome from '@/components/ClassroomHome';
+import AssignmentHome from '@/components/AssignmentHome';
 
 import firebase from 'firebase';
 
@@ -41,6 +42,14 @@ let router = new Router({
       path: '/classroomhome/:id',
       name: 'ClassroomHome',
       component: ClassroomHome,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/assignmenthome/:id',
+      name: 'AssignmentHome',
+      component: AssignmentHome,
       meta: {
         requiresAuth: true,
       },
