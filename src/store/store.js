@@ -19,6 +19,7 @@ export const store = new Vuex.Store({
       return state.user;
     },
     getClassroom: state => {
+      console.log('getting croom');
       return state.classroom;
     },
     getClassrooms: state => {
@@ -68,7 +69,6 @@ export const store = new Vuex.Store({
       context.commit('setUser');
     },
     getClassroom(context, payload) {
-      console.log(payload.id);
       context.commit('setClassroom', payload.id);
     },
     getAssignment(context, payload) {

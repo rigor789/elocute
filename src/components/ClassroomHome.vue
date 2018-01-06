@@ -137,34 +137,25 @@ export default {
 		assignmentTextRules: [v => !!v || 'Assignment Text is required'],
 	}),
 	created() {
-		this.getClassrooms();
-		this.getClassroom();
-		this.getStudents();
-		this.getAssignments();
+		this.buildClassroom();
 	},
 	methods: {
-		getClassrooms: function() {
-			this.$store.dispatch('getClassrooms').then(() => {
-				this.getClassroom();
-			});
-		},
-		getClassroom() {
+		buildClassroom() {
 			let classId = this.$route.params.id;
-			this.$store.dispatch('getClassroom', {
-				id: classId,
-			});
-		},
-		getStudents() {
-			let classId = this.$route.params.id;
-			this.$store.dispatch('getStudents', {
-				id: classId,
-			});
-		},
-		getAssignments() {
-			let classId = this.$route.params.id;
-			this.$store.dispatch('getAssignments', {
-				id: classId,
-			});
+			this.$store
+				.dispatch('getClassroom', {
+					id: classId,
+				})
+				.then(() => {
+					this.$store.dispatch('getStudents', {
+						id: classId,
+					});
+				})
+				.then(() => {
+					this.$store.dispatch('getAssignments', {
+						id: classId,
+					});
+				});
 		},
 		search() {
 			this.$store.dispatch('findUser', {
